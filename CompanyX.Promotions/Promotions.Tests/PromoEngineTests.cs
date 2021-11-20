@@ -71,7 +71,7 @@ namespace CompanyX.Promotions.Tests
         [InlineData(2, 40)]
         public void CalculateOrderTotal_ContainsOnlyC_ReturnsTotalBasedOnUnitPrice(int quantity, decimal expectedTotal)
         {
-            var order = new Order(new Dictionary<string, int> { { "C", quantity } });
+            var order = new Order(new Dictionary<string, int> {{"C", quantity}});
 
             var actual = _engine.CalculateOrderTotal(order);
 
@@ -84,7 +84,7 @@ namespace CompanyX.Promotions.Tests
         [InlineData(2, 30)]
         public void CalculateOrderTotal_ContainsOnlyD_ReturnsTotalBasedOnUnitPrice(int quantity, decimal expectedTotal)
         {
-            var order = new Order(new Dictionary<string, int> { { "D", quantity } });
+            var order = new Order(new Dictionary<string, int> {{"D", quantity}});
 
             var actual = _engine.CalculateOrderTotal(order);
 
@@ -99,9 +99,9 @@ namespace CompanyX.Promotions.Tests
         {
             var order = new Order(new Dictionary<string, int>
             {
-                { "A", 1 },
-                { "B", 1 },
-                { "C", 1 }
+                {"A", 1},
+                {"B", 1},
+                {"C", 1}
             });
             const decimal expected = 100m;
 

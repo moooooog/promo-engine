@@ -12,9 +12,9 @@ namespace CompanyX.Promotions
             _items = new Dictionary<string, int>(items, StringComparer.InvariantCultureIgnoreCase);
         }
 
-        public int GetItemQuantity(string sku)
+        public int GetSkuQuantity(string skuId)
         {
-            _items.TryGetValue(sku, out var quantity);
+            _items.TryGetValue(skuId, out var quantity);
             return quantity;
         }
     }

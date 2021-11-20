@@ -24,7 +24,7 @@ namespace CompanyX.Promotions
 
             foreach (var sku in _skus)
             {
-                var skuQuantity = order.GetItemQuantity(sku.Id);
+                var skuQuantity = order.GetSkuQuantity(sku.Id);
                 var skuTotal = skuQuantity * sku.UnitPrice;
                 orderTotal += skuTotal;
             }
