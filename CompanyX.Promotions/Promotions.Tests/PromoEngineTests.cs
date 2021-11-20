@@ -64,5 +64,50 @@ namespace CompanyX.Promotions.Tests
 
             actual.Should().Be(expectedTotal);
         }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(1, 20)]
+        [InlineData(2, 40)]
+        public void CalculateOrderTotal_ContainsOnlyC_ReturnsTotalBasedOnUnitPrice(int quantity, decimal expectedTotal)
+        {
+            var order = new Order(new Dictionary<string, int> { { "C", quantity } });
+
+            var actual = _engine.CalculateOrderTotal(order);
+
+            actual.Should().Be(expectedTotal);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(1, 15)]
+        [InlineData(2, 30)]
+        public void CalculateOrderTotal_ContainsOnlyD_ReturnsTotalBasedOnUnitPrice(int quantity, decimal expectedTotal)
+        {
+            var order = new Order(new Dictionary<string, int> { { "D", quantity } });
+
+            var actual = _engine.CalculateOrderTotal(order);
+
+            actual.Should().Be(expectedTotal);
+        }
+
+        /// <summary>
+        /// This is "Scenario A" from the problem statement.
+        /// </summary>
+        [Fact]
+        public void CalculateOrderTotal_CombinedSingleSkus_ReturnsTotalBasedOnUnitPrices()
+        {
+            var order = new Order(new Dictionary<string, int>
+            {
+                { "A", 1 },
+                { "B", 1 },
+                { "C", 1 }
+            });
+            const decimal expected = 100m;
+
+            var actual = _engine.CalculateOrderTotal(order);
+
+            actual.Should().Be(expected);
+        }
     }
 }
