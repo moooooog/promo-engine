@@ -20,8 +20,19 @@ namespace CompanyX.Promotions.Tests
         [Fact]
         public void CalculateOrderTotal_EmptyOrder_ReturnsZero()
         {
-            var order = new Order(new Dictionary<char, int>());
+            var order = new Order(new Dictionary<string, int>());
             const decimal expected = 0m;
+
+            var actual = _engine.CalculateOrderTotal(order);
+
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void CalculateOrderTotal_SingleA_Returns50()
+        {
+            var order = new Order(new Dictionary<string, int> {{"A", 1}});
+            const decimal expected = 50m;
 
             var actual = _engine.CalculateOrderTotal(order);
 

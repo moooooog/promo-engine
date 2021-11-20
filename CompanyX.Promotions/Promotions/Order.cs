@@ -1,14 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CompanyX.Promotions
 {
     public class Order
     {
-        private readonly Dictionary<char, int> _items;
+        private readonly Dictionary<string, int> _items;
 
-        public Order(Dictionary<char, int> items)
+        public Order(IDictionary<string, int> items)
         {
-            _items = items;
+            _items = new Dictionary<string, int>(items, StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        public int GetItemQuantity(string sku)
+        {
+            _items.TryGetValue(sku, out var quantity);
+            return quantity;
         }
     }
 }
