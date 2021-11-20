@@ -38,5 +38,16 @@ namespace CompanyX.Promotions.Tests
 
             actual.Should().Be(expected);
         }
+
+        [Fact]
+        public void CalculateOrderTotal_TwoAs_Returns100()
+        {
+            var order = new Order(new Dictionary<string, int> {{"A", 2}});
+            const decimal expected = 100m;
+
+            var actual = _engine.CalculateOrderTotal(order);
+
+            actual.Should().Be(expected);
+        }
     }
 }
