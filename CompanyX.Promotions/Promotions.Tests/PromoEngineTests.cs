@@ -29,7 +29,7 @@ namespace CompanyX.Promotions.Tests
         }
 
         [Fact]
-        public void CalculateOrderTotal_SingleA_Returns50()
+        public void CalculateOrderTotal_SingleA_ReturnsAUnitPrice()
         {
             var order = new Order(new Dictionary<string, int> {{"A", 1}});
             const decimal expected = 50m;
@@ -39,15 +39,30 @@ namespace CompanyX.Promotions.Tests
             actual.Should().Be(expected);
         }
 
-        [Fact]
-        public void CalculateOrderTotal_TwoAs_Returns100()
+        [Theory]
+        [InlineData(2, 100)]
+        [InlineData(3, 150)]
+        public void CalculateOrderTotal_MultipleAWithNoPromotion_ReturnsTotalBasedOnUnitPrice(int quantity,
+            decimal expectedTotal)
         {
-            var order = new Order(new Dictionary<string, int> {{"A", 2}});
-            const decimal expected = 100m;
+            var order = new Order(new Dictionary<string, int> {{"A", quantity}});
 
             var actual = _engine.CalculateOrderTotal(order);
 
-            actual.Should().Be(expected);
+            actual.Should().Be(expectedTotal);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(1, 30)]
+        [InlineData(2, 60)]
+        public void CalculateOrderTotal_ContainsOnlyB_ReturnsTotalBasedOnUnitPrice(int quantity, decimal expectedTotal)
+        {
+            var order = new Order(new Dictionary<string, int> {{"B", quantity}});
+
+            var actual = _engine.CalculateOrderTotal(order);
+
+            actual.Should().Be(expectedTotal);
         }
     }
 }

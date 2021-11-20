@@ -12,7 +12,8 @@ namespace CompanyX.Promotions
             }
 
             var quantityA = order.GetItemQuantity("A");
-            return quantityA * 50m;
+            var quantityB = order.GetItemQuantity("B");
+            return quantityA * 50m + quantityB * 30m;
         }
     }
 }
