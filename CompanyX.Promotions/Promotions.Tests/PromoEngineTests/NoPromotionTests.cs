@@ -4,9 +4,9 @@ using CompanyX.Promotions.Rules;
 using FluentAssertions;
 using Xunit;
 
-namespace CompanyX.Promotions.Tests
+namespace CompanyX.Promotions.Tests.PromoEngineTests
 {
-    public class PromoEngineTests
+    public class NoPromotionTests
     {
         private readonly IPromoEngine _engine = new PromoEngine(
             new List<IRule>
@@ -99,9 +99,6 @@ namespace CompanyX.Promotions.Tests
             actual.Should().Be(expectedTotal);
         }
 
-        /// <summary>
-        /// This is "Scenario A" from the problem statement.
-        /// </summary>
         [Fact]
         public void CalculateOrderTotal_CombinedSingleSkus_ReturnsTotalBasedOnUnitPrices()
         {
