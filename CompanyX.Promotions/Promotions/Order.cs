@@ -68,5 +68,7 @@ namespace CompanyX.Promotions
                 }
             }
         }
+
+        public bool IsEmpty() => !_items.Any(item => item.Value > 0);
     }
 }

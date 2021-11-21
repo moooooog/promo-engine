@@ -137,5 +137,25 @@ namespace CompanyX.Promotions.Tests
                 actualQuantityB.Should().Be(expectedQuantityB);
             }
         }
+
+        [Fact]
+        public void IsEmpty_NotInitialisedWithItems_ReturnsTrue()
+        {
+            var order = new Order(new SkuQuantity[] { });
+
+            var actual = order.IsEmpty();
+
+            actual.Should().BeTrue();
+        }
+
+        [Fact]
+        public void IsEmpty_InitialisedWithItems_ReturnsFalse()
+        {
+            var order = new Order(new[] {new SkuQuantity("A", 1)});
+
+            var actual = order.IsEmpty();
+
+            actual.Should().BeFalse();
+        }
     }
 }

@@ -31,7 +31,10 @@ namespace CompanyX.Promotions
                 remainingOrder.Subtract(ruleResult.SkusConsumed);
             }
 
-            // TODO: Check if there is anything unexpected remaining on the order
+            if (!remainingOrder.IsEmpty())
+            {
+                throw new PromoEngineException("The order contains items that have not been processed");
+            }
 
             return orderTotal;
         }

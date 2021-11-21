@@ -8,6 +8,7 @@ namespace CompanyX.Promotions.Tests.PromoEngineTests
 {
     public class NoPromotionTests
     {
+        // Engine contains no promotion-based rules (just the unit price ones)
         private readonly IPromoEngine _engine = new PromoEngine(
             new List<IRule>
             {
@@ -100,7 +101,7 @@ namespace CompanyX.Promotions.Tests.PromoEngineTests
         }
 
         [Fact]
-        public void CalculateOrderTotal_CombinedSingleSkus_ReturnsTotalBasedOnUnitPrices()
+        public void CalculateOrderTotal_CombinedSingleUnitPerSku_ReturnsTotalBasedOnUnitPrices()
         {
             var order = new Order(new[]
             {
@@ -108,11 +109,40 @@ namespace CompanyX.Promotions.Tests.PromoEngineTests
                 new SkuQuantity("B", 1),
                 new SkuQuantity("C", 1)
             });
-            const decimal expected = 100;
+            const decimal expected = 100; // 50 + 30 + 20
 
             var actual = _engine.CalculateOrderTotal(order);
 
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void CalculateOrderTotal_CombinedMultipleUnitsPerSku_ReturnsTotalBasedOnUnitPricesAndMultiples()
+        {
+            var order = new Order(new[]
+            {
+                new SkuQuantity("A", 2),
+                new SkuQuantity("B", 3)
+            });
+            const decimal expected = 190; // 2*50 + 3*30;
+
+            var actual = _engine.CalculateOrderTotal(order);
+
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void CalculateOrderTotal_UnprocessedItem_ThrowsException()
+        {
+            var order = new Order(new[]
+            {
+                new SkuQuantity("A", 2),
+                new SkuQuantity("Z", 3)
+            });
+
+            Func<decimal> act = () => _engine.CalculateOrderTotal(order);
+
+            act.Should().Throw<PromoEngineException>();
         }
     }
 }
