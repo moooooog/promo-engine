@@ -64,7 +64,7 @@ namespace CompanyX.Promotions.Tests.Rules
         }
 
         [Fact]
-        public void Apply_OrderDoesNotContainsSku_ReturnsNoSkusConsumed()
+        public void Apply_OrderDoesNotContainSku_ReturnsNoSkusConsumed()
         {
             var rule = new UnitPriceRule(new Sku("A", 10));
             var order = new Order(new SkuQuantity[] { });
