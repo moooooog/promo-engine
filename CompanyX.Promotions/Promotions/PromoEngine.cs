@@ -5,13 +5,12 @@ namespace CompanyX.Promotions
 {
     public class PromoEngine : IPromoEngine
     {
-        private readonly List<Sku> _skus = new List<Sku>
+        private readonly IEnumerable<IRule> _rules;
+
+        public PromoEngine(IEnumerable<IRule> rules)
         {
-            new Sku {Id = "A", UnitPrice = 50},
-            new Sku {Id = "B", UnitPrice = 30},
-            new Sku {Id = "C", UnitPrice = 20},
-            new Sku {Id = "D", UnitPrice = 15}
-        };
+            _rules = rules;
+        }
 
         public decimal CalculateOrderTotal(Order order)
         {
@@ -20,14 +19,19 @@ namespace CompanyX.Promotions
                 throw new ArgumentNullException(nameof(order));
             }
 
+            var remainingOrder = new Order(order);
+
             var orderTotal = 0m;
 
-            foreach (var sku in _skus)
+            foreach (var rule in _rules)
             {
-                var skuQuantity = order.GetSkuQuantity(sku.Id);
-                var skuTotal = skuQuantity * sku.UnitPrice;
-                orderTotal += skuTotal;
+                var ruleResult = rule.Apply(remainingOrder);
+                
+                orderTotal += ruleResult.RulePrice;
+                remainingOrder.Subtract(ruleResult.SkusConsumed);
             }
+
+            // TODO: Check if there is anything unexpected remaining on the order
 
             return orderTotal;
         }

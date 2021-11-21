@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CompanyX.Promotions.Rules;
 using FluentAssertions;
 using Xunit;
 
@@ -7,7 +8,14 @@ namespace CompanyX.Promotions.Tests
 {
     public class PromoEngineTests
     {
-        private readonly PromoEngine _engine = new PromoEngine();
+        private readonly IPromoEngine _engine = new PromoEngine(
+            new List<IRule>
+            {
+                new UnitPriceRule(new Sku("A", 50)),
+                new UnitPriceRule(new Sku("B", 30)),
+                new UnitPriceRule(new Sku("C", 20)),
+                new UnitPriceRule(new Sku("D", 15))
+            });
 
         [Fact]
         public void CalculateOrderTotal_NullOrder_ThrowsException()
@@ -20,8 +28,8 @@ namespace CompanyX.Promotions.Tests
         [Fact]
         public void CalculateOrderTotal_EmptyOrder_ReturnsZero()
         {
-            var order = new Order(new Dictionary<string, int>());
-            const decimal expected = 0m;
+            var order = new Order(Array.Empty<SkuQuantity>());
+            const decimal expected = 0;
 
             var actual = _engine.CalculateOrderTotal(order);
 
@@ -31,8 +39,8 @@ namespace CompanyX.Promotions.Tests
         [Fact]
         public void CalculateOrderTotal_SingleA_ReturnsAUnitPrice()
         {
-            var order = new Order(new Dictionary<string, int> {{"A", 1}});
-            const decimal expected = 50m;
+            var order = new Order(new[] {new SkuQuantity("A", 1)});
+            const decimal expected = 50;
 
             var actual = _engine.CalculateOrderTotal(order);
 
@@ -45,7 +53,7 @@ namespace CompanyX.Promotions.Tests
         public void CalculateOrderTotal_MultipleAWithNoPromotion_ReturnsTotalBasedOnUnitPrice(int quantity,
             decimal expectedTotal)
         {
-            var order = new Order(new Dictionary<string, int> {{"A", quantity}});
+            var order = new Order(new[] {new SkuQuantity("A", quantity)});
 
             var actual = _engine.CalculateOrderTotal(order);
 
@@ -58,7 +66,7 @@ namespace CompanyX.Promotions.Tests
         [InlineData(2, 60)]
         public void CalculateOrderTotal_ContainsOnlyB_ReturnsTotalBasedOnUnitPrice(int quantity, decimal expectedTotal)
         {
-            var order = new Order(new Dictionary<string, int> {{"B", quantity}});
+            var order = new Order(new[] {new SkuQuantity("B", quantity)});
 
             var actual = _engine.CalculateOrderTotal(order);
 
@@ -71,7 +79,7 @@ namespace CompanyX.Promotions.Tests
         [InlineData(2, 40)]
         public void CalculateOrderTotal_ContainsOnlyC_ReturnsTotalBasedOnUnitPrice(int quantity, decimal expectedTotal)
         {
-            var order = new Order(new Dictionary<string, int> {{"C", quantity}});
+            var order = new Order(new[] {new SkuQuantity("C", quantity)});
 
             var actual = _engine.CalculateOrderTotal(order);
 
@@ -84,7 +92,7 @@ namespace CompanyX.Promotions.Tests
         [InlineData(2, 30)]
         public void CalculateOrderTotal_ContainsOnlyD_ReturnsTotalBasedOnUnitPrice(int quantity, decimal expectedTotal)
         {
-            var order = new Order(new Dictionary<string, int> {{"D", quantity}});
+            var order = new Order(new[] {new SkuQuantity("D", quantity)});
 
             var actual = _engine.CalculateOrderTotal(order);
 
@@ -97,13 +105,13 @@ namespace CompanyX.Promotions.Tests
         [Fact]
         public void CalculateOrderTotal_CombinedSingleSkus_ReturnsTotalBasedOnUnitPrices()
         {
-            var order = new Order(new Dictionary<string, int>
+            var order = new Order(new[]
             {
-                {"A", 1},
-                {"B", 1},
-                {"C", 1}
+                new SkuQuantity("A", 1),
+                new SkuQuantity("B", 1),
+                new SkuQuantity("C", 1)
             });
-            const decimal expected = 100m;
+            const decimal expected = 100;
 
             var actual = _engine.CalculateOrderTotal(order);
 
