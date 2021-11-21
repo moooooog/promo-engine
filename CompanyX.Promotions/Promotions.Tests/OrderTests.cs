@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using FluentAssertions;
 using FluentAssertions.Execution;
 using Xunit;
 
@@ -6,6 +8,22 @@ namespace CompanyX.Promotions.Tests
 {
     public class OrderTests
     {
+        [Fact]
+        public void Constructor_NullItems_ThrowsException()
+        {
+            Func<Order> act = () => new Order((IEnumerable<SkuQuantity>) null);
+
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Constructor_NullOrder_ThrowsException()
+        {
+            Func<Order> act = () => new Order((Order) null);
+
+            act.Should().Throw<ArgumentNullException>();
+        }
+
         [Fact]
         public void GetSkuQuantity_SkuIdExists_ReturnsQuantity()
         {
@@ -47,6 +65,29 @@ namespace CompanyX.Promotions.Tests
             const int expectedQuantity = 5;
 
             order.SetSkuQuantity("A", 5);
+            var actualQuantity = order.GetSkuQuantity("A");
+
+            actualQuantity.Should().Be(expectedQuantity);
+        }
+
+        [Fact]
+        public void SetSkuQuantity_NegativeQuantity_ThrowsException()
+        {
+            var order = new Order(new SkuQuantity[] { });
+
+            Action act = () => order.SetSkuQuantity("A", -1);
+
+            act.Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void Subtract_NullItemsToSubtract_DoesNotChangeOrder()
+        {
+            var order = new Order(new[] {new SkuQuantity("A", 2)});
+            const IEnumerable<SkuQuantity> itemsToSubtract = null;
+            const int expectedQuantity = 2;
+
+            order.Subtract(itemsToSubtract);
             var actualQuantity = order.GetSkuQuantity("A");
 
             actualQuantity.Should().Be(expectedQuantity);

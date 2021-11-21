@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CompanyX.Promotions
 {
     public class Order
     {
         private readonly Dictionary<string, int> _items;
-        
+
         public Order(IEnumerable<SkuQuantity> items)
         {
+            if (items == null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+
             _items = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var item in items)
             {
@@ -18,6 +24,11 @@ namespace CompanyX.Promotions
 
         public Order(Order order)
         {
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
             _items = new Dictionary<string, int>(order._items, StringComparer.InvariantCultureIgnoreCase);
         }
 
@@ -29,6 +40,11 @@ namespace CompanyX.Promotions
 
         public void SetSkuQuantity(string skuId, int quantity)
         {
+            if (quantity < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quantity), quantity, "Quantity cannot be negative");
+            }
+
             if (quantity > 0)
             {
                 _items[skuId] = quantity;
@@ -39,13 +55,17 @@ namespace CompanyX.Promotions
             }
         }
 
-        public void Subtract(IEnumerable<SkuQuantity> skuQuantities)
+        public void Subtract(IEnumerable<SkuQuantity> itemsToSubtract)
         {
-            foreach (var skuQuantity in skuQuantities)
+            if (itemsToSubtract != null)
             {
-                var originalQuantity = GetSkuQuantity(skuQuantity.SkuId);
-                var newQuantity = originalQuantity - skuQuantity.UnitCount;
-                SetSkuQuantity(skuQuantity.SkuId, newQuantity);
+                var nonZeroItemsToSubtract = itemsToSubtract.Where(item => item.UnitCount > 0);
+                foreach (var itemToSubtract in nonZeroItemsToSubtract)
+                {
+                    var originalQuantity = GetSkuQuantity(itemToSubtract.SkuId);
+                    var newQuantity = originalQuantity - itemToSubtract.UnitCount;
+                    SetSkuQuantity(itemToSubtract.SkuId, newQuantity);
+                }
             }
         }
     }
