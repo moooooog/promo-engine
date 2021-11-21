@@ -1,4 +1,5 @@
-﻿using CompanyX.Promotions.Rules;
+﻿using System;
+using CompanyX.Promotions.Rules;
 using FluentAssertions;
 using Xunit;
 
@@ -6,6 +7,14 @@ namespace CompanyX.Promotions.Tests.Rules
 {
     public class UnitPriceRuleTests
     {
+        [Fact]
+        public void Constructor_NullSku_ThrowsException()
+        {
+            Func<UnitPriceRule> act = () => new UnitPriceRule(null);
+
+            act.Should().Throw<ArgumentNullException>();
+        }
+
         [Fact]
         public void Apply_OrderDoesNotContainsSku_ReturnsZeroPrice()
         {
