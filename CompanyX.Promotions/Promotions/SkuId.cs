@@ -4,7 +4,7 @@ namespace CompanyX.Promotions
 {
     /// <summary>
     /// A Stock Keeping Unit (SKU) id.
-    /// Encapsulates any validation an comparison rules.
+    /// Encapsulates any validation and comparison rules.
     /// e.g. A SKU is not case-sensitive.
     /// </summary>
     public class SkuId : IEquatable<SkuId>
