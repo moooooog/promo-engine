@@ -19,6 +19,14 @@ namespace CompanyX.Promotions.Tests.PromoEngineTests
             });
 
         [Fact]
+        public void Constructor_NullRules_ThrowsException()
+        {
+            Func<PromoEngine> act = () => new PromoEngine(null);
+
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
         public void CalculateOrderTotal_NullOrder_ThrowsException()
         {
             Func<decimal> act = () => _engine.CalculateOrderTotal(null);

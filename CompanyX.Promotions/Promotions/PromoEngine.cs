@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CompanyX.Promotions
 {
@@ -9,7 +10,7 @@ namespace CompanyX.Promotions
 
         public PromoEngine(IEnumerable<IRule> rules)
         {
-            _rules = rules;
+            _rules = rules ?? throw new ArgumentNullException(nameof(rules));
         }
 
         public decimal CalculateOrderTotal(Order order)
