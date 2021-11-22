@@ -3,9 +3,9 @@ using CompanyX.Promotions.Rules;
 using FluentAssertions;
 using Xunit;
 
-namespace CompanyX.Promotions.Tests.Rules
+namespace CompanyX.Promotions.Tests.Rules.MultibuyPromoRuleTests
 {
-    public class MultibuyPromoRuleTests
+    public class SingleSkuTests
     {
         [Theory]
         [InlineData(null, "the sku id is null")]
