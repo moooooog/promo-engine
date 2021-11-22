@@ -3,10 +3,17 @@ using System.Collections.Generic;
 
 namespace CompanyX.Promotions.Rules
 {
+    /// <summary>
+    /// Rule for applying the unit price of a single SKU to the items in an <see cref="IOrder"/>.
+    /// </summary>
     public class UnitPriceRule : IRule
     {
         private readonly Sku _sku;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="sku">The SKU containing it's unit price.</param>
         public UnitPriceRule(Sku sku)
         {
             _sku = sku ?? throw new ArgumentNullException(nameof(sku));

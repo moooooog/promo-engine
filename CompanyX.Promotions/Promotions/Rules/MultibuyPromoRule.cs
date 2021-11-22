@@ -4,11 +4,22 @@ using System.Linq;
 
 namespace CompanyX.Promotions.Rules
 {
+    /// <summary>
+    /// Rule for applying a multibuy promotion to items in an <see cref="IOrder"/>.
+    /// </summary>
     public class MultibuyPromoRule : IRule
     {
+        // The items (SKU ids and the quantity) that make up a multibuy promotion.
         private readonly List<SkuQuantity> _items;
+
+        // The combine price of the items in the promotion.
         private readonly decimal _combinedPrice;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="items">The items (SKU ids and the quantity) that make up a multibuy promotion.</param>
+        /// <param name="combinedPrice">The combine price of the items in the promotion.</param>
         public MultibuyPromoRule(IEnumerable<SkuQuantity> items, decimal combinedPrice)
         {
             var itemsList = items?.ToList();
@@ -38,11 +49,22 @@ namespace CompanyX.Promotions.Rules
             _combinedPrice = combinedPrice;
         }
 
+        /// <summary>
+        /// Constructor for creating a multibuy rule that relates to a single SKU (for caller convenience).
+        /// </summary>
+        /// <param name="skuId">The single SKU id that applies to the promotion.</param>
+        /// <param name="unitCount">The number of items making up a multibuy.</param>
+        /// <param name="combinedPrice">The combined price of the items in the promotion.</param>
         public MultibuyPromoRule(string skuId, int unitCount, decimal combinedPrice)
             : this(new[] {new SkuQuantity(skuId, unitCount)}, combinedPrice)
         {
         }
 
+        /// <summary>
+        /// Constructor for creating a multibuy rule that relates to a single SKU (for caller convenience).
+        /// </summary>
+        /// <param name="item">The item (SKU id and the quantity) that make up a multibuy promotion.</param>
+        /// <param name="combinedPrice">The combined price of the items in the promotion.</param>
         public MultibuyPromoRule(SkuQuantity item, decimal combinedPrice)
             : this(new[] {item}, combinedPrice)
         {
@@ -50,6 +72,8 @@ namespace CompanyX.Promotions.Rules
 
         public ApplyRuleResult Apply(IOrder remainingOrder)
         {
+            // Determine the number of times this promotion rule can be applied to the remaining order.
+            // If we check for each SKU, it will be the smaller of those.
             var itemMultibuyCounts = _items
                 .Select(item => remainingOrder.GetSkuQuantity(item.SkuId) / item.UnitCount);
 

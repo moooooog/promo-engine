@@ -6,8 +6,14 @@ namespace CompanyX.Promotions
 {
     public class Order : IOrder
     {
+        // Items stored in a dictionary for easy lookup.
+        // Key is the SKU id, value is the number of units requested.
         private readonly Dictionary<SkuId, int> _items;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="items">Items (SKU ids and quantities) to be added to the order.</param>
         public Order(IEnumerable<SkuQuantity> items)
         {
             if (items == null)
@@ -35,14 +41,7 @@ namespace CompanyX.Promotions
                 throw new ArgumentOutOfRangeException(nameof(quantity), quantity, "Quantity cannot be negative");
             }
 
-            if (quantity > 0)
-            {
-                _items[skuId] = quantity;
-            }
-            else
-            {
-                _items.Remove(skuId);
-            }
+            _items[skuId] = quantity;
         }
 
         public void Subtract(IEnumerable<SkuQuantity> itemsToSubtract)

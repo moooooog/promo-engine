@@ -2,10 +2,19 @@
 
 namespace CompanyX.Promotions
 {
+    /// <summary>
+    /// A Stock Keeping Unit (SKU) id.
+    /// Encapsulates any validation an comparison rules.
+    /// e.g. A SKU is not case-sensitive.
+    /// </summary>
     public class SkuId : IEquatable<SkuId>
     {
         private readonly string _id;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="id">String representation of the id.</param>
         public SkuId(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -16,7 +25,11 @@ namespace CompanyX.Promotions
             _id = id;
         }
 
-        public static implicit operator SkuId(string idString) => new SkuId(idString);
+        /// <summary>
+        /// Allow implicit conversion of a string to a SKU id (for caller convenience).
+        /// </summary>
+        /// <param name="id">String representation of the id.</param>
+        public static implicit operator SkuId(string id) => new SkuId(id);
 
         public override string ToString() => _id;
 
