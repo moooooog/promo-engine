@@ -5,45 +5,49 @@ namespace CompanyX.Promotions.Rules
 {
     public class MultibuyPromoRule : IRule
     {
-        private readonly string _skuId;
-        private readonly int _unitCount;
+        private readonly SkuQuantity _item;
         private readonly decimal _combinedPrice;
 
         public MultibuyPromoRule(string skuId, int unitCount, decimal combinedPrice)
+            : this(new SkuQuantity(skuId, unitCount), combinedPrice)
         {
-            if (string.IsNullOrWhiteSpace(skuId))
+        }
+
+        public MultibuyPromoRule(SkuQuantity item, decimal combinedPrice)
+        {
+            if (item == null)
             {
-                throw new ArgumentException("The SKU id must consist of non-whitespace characters", nameof(skuId));
+                throw new ArgumentNullException(nameof(item));
             }
 
-            if (unitCount < 1)
+            if (item.UnitCount < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(unitCount), unitCount, "The UnitCount must be 1 or more");
+                throw new ArgumentOutOfRangeException(nameof(SkuQuantity.UnitCount), item.UnitCount,
+                    "The UnitCount must be 1 or more");
             }
 
             if (combinedPrice < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(unitCount), unitCount,
+                throw new ArgumentOutOfRangeException(nameof(combinedPrice), combinedPrice,
                     "The CombinedPrice must not be negative");
             }
 
-            _skuId = skuId;
-            _unitCount = unitCount;
+            _item = item;
             _combinedPrice = combinedPrice;
         }
 
         public ApplyRuleResult Apply(Order remainingOrder)
         {
-            var skuQuantity = remainingOrder.GetSkuQuantity(_skuId);
+            var skuQuantity = remainingOrder.GetSkuQuantity(_item.SkuId);
 
-            var multibuyCount = skuQuantity / _unitCount;
+            var multibuyCount = skuQuantity / _item.UnitCount;
 
             var skuTotal = multibuyCount * _combinedPrice;
 
             return new ApplyRuleResult
             {
                 RulePrice = skuTotal,
-                SkusConsumed = new List<SkuQuantity> {new SkuQuantity(_skuId, multibuyCount * _unitCount)}
+                SkusConsumed = new List<SkuQuantity> {new SkuQuantity(_item.SkuId, multibuyCount * _item.UnitCount)}
             };
         }
     }
