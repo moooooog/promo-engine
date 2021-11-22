@@ -48,7 +48,7 @@ namespace CompanyX.Promotions.Rules
         {
         }
 
-        public ApplyRuleResult Apply(Order remainingOrder)
+        public ApplyRuleResult Apply(IOrder remainingOrder)
         {
             var itemMultibuyCounts = _items
                 .Select(item => remainingOrder.GetSkuQuantity(item.SkuId) / item.UnitCount);

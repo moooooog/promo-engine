@@ -11,15 +11,7 @@ namespace CompanyX.Promotions.Tests
         [Fact]
         public void Constructor_NullItems_ThrowsException()
         {
-            Func<Order> act = () => new Order((IEnumerable<SkuQuantity>) null);
-
-            act.Should().Throw<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Constructor_NullOrder_ThrowsException()
-        {
-            Func<Order> act = () => new Order((Order) null);
+            Func<Order> act = () => new Order(null);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -156,6 +148,29 @@ namespace CompanyX.Promotions.Tests
             var actual = order.IsEmpty();
 
             actual.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Clone_SimpleOrder_ClonedOrderIsADifferentObjectReference()
+        {
+            var order = new Order(new[] {new SkuQuantity("A", 3)});
+
+            var clone = order.Clone();
+
+            clone.Should().NotBeSameAs(order);
+        }
+
+        [Fact]
+        public void Clone_OrderWithOneItem_ClonedOrderContainsItem()
+        {
+            var order = new Order(new[] {new SkuQuantity("A", 3)});
+            var expectedQuantity = 3;
+
+            var clone = order.Clone();
+
+            var actualQuantity = clone.GetSkuQuantity("A");
+
+            actualQuantity.Should().Be(expectedQuantity);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace CompanyX.Promotions.Rules
             _sku = sku ?? throw new ArgumentNullException(nameof(sku));
         }
 
-        public ApplyRuleResult Apply(Order remainingOrder)
+        public ApplyRuleResult Apply(IOrder remainingOrder)
         {
             var skuQuantity = remainingOrder.GetSkuQuantity(_sku.Id);
             var skuTotal = skuQuantity * _sku.UnitPrice;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CompanyX.Promotions
 {
@@ -13,14 +12,14 @@ namespace CompanyX.Promotions
             _rules = rules ?? throw new ArgumentNullException(nameof(rules));
         }
 
-        public decimal CalculateOrderTotal(Order order)
+        public decimal CalculateOrderTotal(IOrder order)
         {
             if (order == null)
             {
                 throw new ArgumentNullException(nameof(order));
             }
 
-            var remainingOrder = new Order(order);
+            var remainingOrder = order.Clone();
 
             var orderTotal = 0m;
 

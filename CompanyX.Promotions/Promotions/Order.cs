@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CompanyX.Promotions
 {
-    public class Order
+    public class Order : IOrder
     {
         private readonly Dictionary<string, int> _items;
 
@@ -20,16 +20,6 @@ namespace CompanyX.Promotions
             {
                 SetSkuQuantity(item.SkuId, item.UnitCount);
             }
-        }
-
-        public Order(Order order)
-        {
-            if (order == null)
-            {
-                throw new ArgumentNullException(nameof(order));
-            }
-
-            _items = new Dictionary<string, int>(order._items, StringComparer.InvariantCultureIgnoreCase);
         }
 
         public int GetSkuQuantity(string skuId)
@@ -70,5 +60,11 @@ namespace CompanyX.Promotions
         }
 
         public bool IsEmpty() => !_items.Any(item => item.Value > 0);
+
+        public IOrder Clone()
+        {
+            var skuQuantities = _items.Select(item => new SkuQuantity(item.Key, item.Value));
+            return new Order(skuQuantities);
+        }
     }
 }

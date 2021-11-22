@@ -2,6 +2,6 @@
 {
     public interface IRule
     {
-        ApplyRuleResult Apply(Order remainingOrder);
+        ApplyRuleResult Apply(IOrder remainingOrder);
     }
 }
