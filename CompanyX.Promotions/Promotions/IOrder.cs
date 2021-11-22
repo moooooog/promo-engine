@@ -4,9 +4,9 @@ namespace CompanyX.Promotions
 {
     public interface IOrder
     {
-        int GetSkuQuantity(string skuId);
+        int GetSkuQuantity(SkuId skuId);
 
-        void SetSkuQuantity(string skuId, int quantity);
+        void SetSkuQuantity(SkuId skuId, int quantity);
         
         void Subtract(IEnumerable<SkuQuantity> itemsToSubtract);
         

@@ -6,7 +6,7 @@ namespace CompanyX.Promotions
 {
     public class Order : IOrder
     {
-        private readonly Dictionary<string, int> _items;
+        private readonly Dictionary<SkuId, int> _items;
 
         public Order(IEnumerable<SkuQuantity> items)
         {
@@ -15,20 +15,20 @@ namespace CompanyX.Promotions
                 throw new ArgumentNullException(nameof(items));
             }
 
-            _items = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
+            _items = new Dictionary<SkuId, int>();
             foreach (var item in items)
             {
                 SetSkuQuantity(item.SkuId, item.UnitCount);
             }
         }
 
-        public int GetSkuQuantity(string skuId)
+        public int GetSkuQuantity(SkuId skuId)
         {
             _items.TryGetValue(skuId, out var quantity);
             return quantity;
         }
 
-        public void SetSkuQuantity(string skuId, int quantity)
+        public void SetSkuQuantity(SkuId skuId, int quantity)
         {
             if (quantity < 0)
             {

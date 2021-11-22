@@ -23,7 +23,7 @@ namespace CompanyX.Promotions.Rules
                     "All UnitCounts must be 1 or more");
             }
 
-            if (itemsList.GroupBy(item => item.SkuId.ToLowerInvariant()).Any(group => group.Count() > 1))
+            if (itemsList.GroupBy(item => item.SkuId).Any(group => group.Count() > 1))
             {
                 throw new ArgumentException("The sku ids must be unique");
             }
